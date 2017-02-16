@@ -38,6 +38,8 @@ Route::group(['prefix'=>'admin','middleware'=>'auth','namespace'=>'Backend','as'
             //修改用户密码
             Route::get('password-change','UserPasswordController@edit')->name('user.change-password');
             Route::put('password-change','UserPasswordController@update')->name('user.change-password');
+            //修改用户状态
+            Route::get('mark/{status}', 'UserStatusController@mark')->name('user.mark')->where(['status' => '[0,1]']);
         });
     });
 });

@@ -29,6 +29,7 @@ class UserRepository extends Repository
             'id',
             'name',
             'email',
+            'status',
             'created_at',
             'updated_at'
         ]);
@@ -83,13 +84,32 @@ class UserRepository extends Repository
         throw new GeneralException('删除用户失败!');
     }
 
+    /**
+     * 修改用户密码
+     * @param Model $user
+     * @param $input
+     * @return bool
+     * @throws GeneralException
+     */
     public function updatePassword(Model $user,$input)
     {
         $user->password=bcrypt($input['password']);
         if(parent::save($user)){
             return true;
         }
-        throw new GeneralException("密码修改失败!");
+        throw new GeneralException('密码修改失败!');
+    }
+
+    public function mark(Model $user,$status)
+    {
+        if(auth()->id()==$user->id&&$status==0){
+            throw new GeneralException('您不能禁用自己的账号!');
+        }
+        $user->status=$status;
+        if(parent::save($user)){
+            return true;
+        }
+        throw new GeneralException('修改用户状态失败!');
     }
 
     /**

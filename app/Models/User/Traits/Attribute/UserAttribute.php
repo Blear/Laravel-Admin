@@ -20,6 +20,7 @@ trait UserAttribute
     {
         return $this->getEditButtonAttribute()
             .$this->getChangePasswordButtonAttribute()
+            .$this->getStatusButtonAttribute()
             .$this->getDeleteButtonAttribute();
     }
 
@@ -42,17 +43,46 @@ trait UserAttribute
     }
 
     /**
+     * 状态修改按钮
+     * @return string
+     */
+    public function getStatusButtonAttribute()
+    {
+        if ($this->id != auth()->id()) {
+            switch ($this->status) {
+                case 0:
+                    return '<a href="'.route('admin.user.mark',[$this,1]).'" class="btn btn-xs btn-success"><i class="fa fa-play" data-toggle="tooltip" data-placement="top" title="启用"></i></a> ';
+                // No break
+
+                case 1:
+                    return '<a href="'.route('admin.user.mark',[$this,0]).'" class="btn btn-xs btn-warning"><i class="fa fa-pause" data-toggle="tooltip" data-placement="top" title="禁用"></i></a> ';
+                // No break
+
+                default:
+                    return '';
+                // No break
+            }
+        }
+
+        return '';
+    }
+
+    /**
      * 删除按钮
      * @return string
      */
     public function getDeleteButtonAttribute()
     {
+        if ($this->id != auth()->id()) {
             return '<a href="javascript:void(0);" onclick="_delete($(this))" name="delete" class="btn btn-xs btn-danger" ><i class="fa fa-trash" data-toggle="tooltip" data-placement="top" title="删除"></i>
                 <form action="'.route('admin.user.destroy',$this).'" method="POST" name="" style="display:none">
                     <input name="_method" value="delete" type="hidden">
                     <input name="_token" value="'.csrf_token().'" type="hidden">
                 </form>
             </a> ';
+        }
+
+        return '';
     }
 
 }
