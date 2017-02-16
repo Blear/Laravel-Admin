@@ -21,5 +21,5 @@ elixir((mix) => {
     .sass(['backend/app.scss','plugins/sweetalert/sweetalert.scss'],'resources/assets/css/backend/app.css')
     .styles('backend/app.css','public/css/backend.css')
     .webpack('backend/app.js','resources/assets/js/backend.js')
-    .scripts(['backend.js','plugins/sweetalert/sweetalert.min.js',],'public/js/backend.js');
+    .scripts(['backend.js','plugins/sweetalert/sweetalert.min.js','script.js'],'public/js/backend.js');
 });

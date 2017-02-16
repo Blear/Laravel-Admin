@@ -17,14 +17,14 @@
             <li class="header">管理面板</li>
 
 
-            <li class="active treeview">
+            <li class="{{active_class(if_route('admin.home'))}} treeview">
                 <a href="">
                     <i class="fa fa-dashboard"></i>
                     <span>管理主页</span>
                 </a>
             </li>
 
-            <li class=" treeview">
+            <li class="{{active_class(if_controller(['App\Http\Controllers\Backend\User\UserController']))}} treeview">
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span>权限管理</span>
@@ -33,8 +33,8 @@
 
                 <ul class="treeview-menu" >
 
-                    <li class="">
-                        <a href="">
+                    <li class="{{active_class(if_controller(['App\Http\Controllers\Backend\User\UserController']))}}">
+                        <a href="{{route('admin.user.index')}}">
                             <i class="fa fa-circle-o"></i>
                             <span>用户管理</span>
                         </a>

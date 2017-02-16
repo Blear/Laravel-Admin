@@ -27,6 +27,13 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 Route::group(['prefix'=>'admin','middleware'=>'auth','namespace'=>'Backend','as'=>'admin.'],function(){
     //后台主页
     Route::get('/','HomeController@index')->name('home');
+    //用户管理
+    Route::group(['namespace'=>'User'],function(){
+        //ajax读取接口
+        Route::post('user/get','UserTableController')->name('user.get');
+        //用户CRUD
+        Route::resource('user','UserController',['except'=>'show']);
+    });
 });
 
 Route::get('/home', 'HomeController@index');
