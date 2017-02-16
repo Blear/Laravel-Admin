@@ -33,6 +33,12 @@ Route::group(['prefix'=>'admin','middleware'=>'auth','namespace'=>'Backend','as'
         Route::post('user/get','UserTableController')->name('user.get');
         //用户CRUD
         Route::resource('user','UserController',['except'=>'show']);
+        //用户操作
+        Route::group(['prefix'=>'user/{user}'],function(){
+            //修改用户密码
+            Route::get('password-change','UserPasswordController@edit')->name('user.change-password');
+            Route::put('password-change','UserPasswordController@update')->name('user.change-password');
+        });
     });
 });
 

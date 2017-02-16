@@ -18,6 +18,11 @@ class UserRepository extends Repository
 {
     const MODEL=User::class;
 
+    /**
+     * DataTables接口
+     * @param bool $trashed
+     * @return mixed
+     */
     public function getForDataTable($trashed=false)
     {
         $dataTableQuery=$this->query()->select([
@@ -33,6 +38,12 @@ class UserRepository extends Repository
         return $dataTableQuery;
     }
 
+    /**
+     * 创建用户
+     * @param array $input
+     * @return bool
+     * @throws GeneralException
+     */
     public function create(array $input)
     {
         $user=$this->createUser($input);
@@ -42,6 +53,13 @@ class UserRepository extends Repository
         throw new GeneralException('添加用户失败!');
     }
 
+    /**
+     * 更新用户信息
+     * @param Model $user
+     * @param array $input
+     * @return bool
+     * @throws GeneralException
+     */
     public function update(Model $user,array $input)
     {
         $this->checkUserByEmail($input,$user);
@@ -51,6 +69,12 @@ class UserRepository extends Repository
         throw new GeneralException('修改用户信息失败!');
     }
 
+    /**
+     * 删除用户
+     * @param Model $user
+     * @return bool
+     * @throws GeneralException
+     */
     public function delete(Model $user)
     {
         if(parent::delete($user)){
@@ -59,7 +83,20 @@ class UserRepository extends Repository
         throw new GeneralException('删除用户失败!');
     }
 
+    public function updatePassword(Model $user,$input)
+    {
+        $user->password=bcrypt($input['password']);
+        if(parent::save($user)){
+            return true;
+        }
+        throw new GeneralException("密码修改失败!");
+    }
 
+    /**
+     * 创建用户实例
+     * @param $input
+     * @return mixed
+     */
     protected function createUser($input){
         $user=self::MODEL;
         $user=new $user;
@@ -69,6 +106,12 @@ class UserRepository extends Repository
         return $user;
     }
 
+    /**
+     * 检查邮箱是否被占用
+     * @param $input
+     * @param $user
+     * @throws GeneralException
+     */
     protected function checkUserByEmail($input,$user)
     {
         if($user->email!=$input['email']){

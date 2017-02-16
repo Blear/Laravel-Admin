@@ -18,7 +18,9 @@ trait UserAttribute
      */
     public function getActionButtonsAttribute()
     {
-        return $this->getEditButtonAttribute().$this->getDeleteButtonAttribute();
+        return $this->getEditButtonAttribute()
+            .$this->getChangePasswordButtonAttribute()
+            .$this->getDeleteButtonAttribute();
     }
 
     /**
@@ -28,6 +30,15 @@ trait UserAttribute
     public function getEditButtonAttribute()
     {
         return '<a href="'.route('admin.user.edit',$this).'" class="btn btn-xs btn-primary"><i class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="编辑"></i></a> ';
+    }
+
+    /**
+     * 修改密码按钮
+     * @return string
+     */
+    public function getChangePasswordButtonAttribute()
+    {
+        return '<a href="'.route('admin.user.change-password',$this).'" class="btn btn-xs btn-info"><i class="fa fa-refresh" data-toggle="tooltip" data-placement="top" title="修改密码"></i></a> ';
     }
 
     /**
