@@ -85,4 +85,12 @@ trait UserAttribute
         return '';
     }
 
+    /**
+     * 检测用户状态是否可用
+     * @return bool
+     */
+    public function isActive() {
+        return $this->status == 1;
+    }
+
 }
