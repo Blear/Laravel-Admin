@@ -28,6 +28,7 @@
                         <th>ID</th>
                         <th>用户名</th>
                         <th>邮箱</th>
+                        <th>角色</th>
                         <th>创建日期</th>
                         <th>修改日期</th>
                         <th>操作</th>
@@ -57,6 +58,7 @@
                     {data: 'id', name: 'users.id'},
                     {data: 'name', name: 'users.name', render: $.fn.dataTable.render.text()},
                     {data: 'email', name: 'users.email', render: $.fn.dataTable.render.text()},
+                    {data: 'roles', name: 'roles.name'},
                     {data: 'created_at', name: 'users.created_at'},
                     {data: 'updated_at', name: 'users.updated_at'},
                     {data: 'actions', name: 'actions', searchable: false, sortable: false}

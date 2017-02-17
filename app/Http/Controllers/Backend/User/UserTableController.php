@@ -18,6 +18,9 @@ class UserTableController extends Controller
     public function __invoke(Request $request)
     {
         return Datatables::of($this->users->getForDataTable($request->get('status'),$request->get('trashed')))
+            ->addColumn('roles',function($user){
+                return $user->roles->count()?implode('<br/>',$user->roles->pluck('name')->toArray()):'NULL';
+            })
             ->addColumn('actions',function($user){
                 return $user->action_buttons;
             })

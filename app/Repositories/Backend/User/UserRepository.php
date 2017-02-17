@@ -25,7 +25,9 @@ class UserRepository extends Repository
      */
     public function getForDataTable($status,$trashed=false)
     {
-        $dataTableQuery=$this->query()->select([
+        $dataTableQuery=$this->query()
+            ->with('roles')
+            ->select([
             'id',
             'name',
             'email',
@@ -65,7 +67,9 @@ class UserRepository extends Repository
     public function update(Model $user,array $input)
     {
         $this->checkUserByEmail($input,$user);
+        $input['status'] = isset($input['status']) ? 1 : 0;
         if(parent::update($user,$input)){
+            parent::save($user);
             return true;
         }
         throw new GeneralException('修改用户信息失败!');
@@ -124,6 +128,7 @@ class UserRepository extends Repository
         $user['name']=$input['name'];
         $user['email']=$input['email'];
         $user['password']=bcrypt($input['password']);
+        $user->status= isset($input['status']) ? 1 : 0;
         return $user;
     }
 

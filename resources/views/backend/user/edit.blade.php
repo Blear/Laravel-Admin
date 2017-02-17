@@ -33,6 +33,15 @@
                         <input class="form-control" placeholder="邮箱" name="email" value="{{$user->email}}" id="email" type="text">
                     </div>
                 </div>
+                @if($user->id!=1)
+                    <div class="form-group">
+                        <label for="status" class="col-lg-2 control-label">启用</label>
+
+                        <div class="col-lg-1">
+                            <input {{$user->status==1 ? 'checked="checked"':' '}} name="status" value="1" id="status" type="checkbox">
+                        </div><!--col-lg-1-->
+                    </div>
+                @endif
             </div><!-- /.box-body -->
         </div><!--box-->
 

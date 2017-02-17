@@ -46,6 +46,14 @@ Route::group(['prefix'=>'admin','middleware'=>'auth','namespace'=>'Backend','as'
             Route::get('mark/{status}', 'UserStatusController@mark')->name('user.mark')->where(['status' => '[0,1]']);
         });
     });
+    //用户组管理
+    Route::group(['namespace'=>'Role'],function(){
+        //ajax读取接口
+        Route::post('role/get','RoleTableController')->name('role.get');
+        //用户组CRUD
+        Route::resource('role','RoleController',['except'=>'show']);
+
+    });
 });
 
 Route::get('/home', 'HomeController@index');

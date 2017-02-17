@@ -44,7 +44,13 @@
                         <input class="form-control" placeholder="确认密码" name="password_confirmation" value="" id="password_confirmation" type="password">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="status" class="col-lg-2 control-label">启用</label>
 
+                    <div class="col-lg-1">
+                        <input name="status" value="1" id="status" type="checkbox" checked="checked">
+                    </div><!--col-lg-1-->
+                </div>
 
 
 

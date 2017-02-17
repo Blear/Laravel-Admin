@@ -24,7 +24,7 @@
                 </a>
             </li>
 
-            <li class="{{active_class(if_controller(['App\Http\Controllers\Backend\User\UserController']))}} treeview">
+            <li class="{{active_class(if_controller(['App\Http\Controllers\Backend\User\UserController','App\Http\Controllers\Backend\Role\RoleController']))}} treeview">
                 <a href="#">
                     <i class="fa fa-users"></i>
                     <span>权限管理</span>
@@ -42,8 +42,8 @@
 
 
 
-                    <li class="">
-                        <a href="">
+                    <li class="{{active_class(if_controller(['App\Http\Controllers\Backend\Role\RoleController']))}}">
+                        <a href="{{route('admin.role.index')}}">
                             <i class="fa fa-circle-o"></i>
                             <span>角色管理</span>
                         </a>
