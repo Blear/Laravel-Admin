@@ -3,13 +3,15 @@
 namespace App\Models\User;
 
 use App\Models\User\Traits\Attribute\UserAttribute;
+use App\Models\User\Traits\Scope\UserScope;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
     use Notifiable,
-        UserAttribute;
+        UserAttribute,
+        UserScope;
 
     /**
      * The attributes that are mass assignable.

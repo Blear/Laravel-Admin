@@ -15,9 +15,9 @@ class UserTableController extends Controller
         $this->users=$users;
     }
 
-    public function __invoke()
+    public function __invoke(Request $request)
     {
-        return Datatables::of($this->users->getForDataTable())
+        return Datatables::of($this->users->getForDataTable($request->get('status')))
             ->addColumn('actions',function($user){
                 return $user->action_buttons;
             })

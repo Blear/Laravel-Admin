@@ -33,6 +33,8 @@ Route::group(['prefix'=>'admin','middleware'=>'auth','namespace'=>'Backend','as'
         Route::post('user/get','UserTableController')->name('user.get');
         //用户CRUD
         Route::resource('user','UserController',['except'=>'show']);
+        //禁用的用户
+        Route::get('user/deactivated','UserStatusController@getDeactivated')->name('user.deactivated');
         //用户操作
         Route::group(['prefix'=>'user/{user}'],function(){
             //修改用户密码

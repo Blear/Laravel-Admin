@@ -15,9 +15,29 @@ class UserStatusController extends Controller
         $this->users=$users;
     }
 
+    /**
+     * 获取已禁用的用户
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getDeactivated()
+    {
+        return view('backend.user.deactivated');
+    }
+
+
+    /**
+     * 修改用户状态
+     * @param User $user
+     * @param $status
+     * @return mixed
+     * @throws \App\Exceptions\GeneralException
+     */
     public function mark(User $user,$status)
     {
         $this->users->mark($user,$status);
-        return redirect()->route('admin.user.index')->withFlashSuccess('修改用户状态成功!');
+        if($status==1)
+            return redirect()->route('admin.user.index')->withFlashSuccess('修改用户状态成功!');
+        else
+            return redirect()->route('admin.user.deactivated')->withFlashSuccess('修改用户状态成功!');
     }
 }

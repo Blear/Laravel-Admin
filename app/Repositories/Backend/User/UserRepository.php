@@ -23,7 +23,7 @@ class UserRepository extends Repository
      * @param bool $trashed
      * @return mixed
      */
-    public function getForDataTable($trashed=false)
+    public function getForDataTable($status)
     {
         $dataTableQuery=$this->query()->select([
             'id',
@@ -33,10 +33,7 @@ class UserRepository extends Repository
             'created_at',
             'updated_at'
         ]);
-        if($trashed==true){
-            return $dataTableQuery->onlyTrashed();
-        }
-        return $dataTableQuery;
+        return $dataTableQuery->active($status);
     }
 
     /**
