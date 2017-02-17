@@ -35,6 +35,8 @@ Route::group(['prefix'=>'admin','middleware'=>'auth','namespace'=>'Backend','as'
         Route::resource('user','UserController',['except'=>'show']);
         //禁用的用户
         Route::get('user/deactivated','UserStatusController@getDeactivated')->name('user.deactivated');
+        //软删除的用户
+        Route::get('user/deleted','UserStatusController@getDeleted')->name('user.deleted');
         //用户操作
         Route::group(['prefix'=>'user/{user}'],function(){
             //修改用户密码

@@ -24,6 +24,11 @@ class UserStatusController extends Controller
         return view('backend.user.deactivated');
     }
 
+    public function getDeleted()
+    {
+        return view('backend.user.deleted');
+    }
+
 
     /**
      * 修改用户状态
