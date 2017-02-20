@@ -18,6 +18,11 @@ trait UserAttribute
      */
     public function getActionButtonsAttribute()
     {
+        if ($this->trashed()) {
+            return $this->getRestoreButtonAttribute() .
+            $this->getDeletePermanentlyButtonAttribute();
+        }
+
         return $this->getEditButtonAttribute()
             .$this->getChangePasswordButtonAttribute()
             .$this->getStatusButtonAttribute()
@@ -91,6 +96,16 @@ trait UserAttribute
      */
     public function isActive() {
         return $this->status == 1;
+    }
+
+    public function getRestoreButtonAttribute()
+    {
+        return '<a href="' . route('admin.user.restore', $this) . '" name="restore_user" class="btn btn-xs btn-info"><i class="fa fa-refresh" data-toggle="tooltip" data-placement="top" title="恢复"></i></a> ';
+    }
+
+    public function getDeletePermanentlyButtonAttribute()
+    {
+        return '<a href="' . route('admin.user.delete-permanently', $this) . '" name="delete_user_perm" class="btn btn-xs btn-danger"><i class="fa fa-trash" data-toggle="tooltip" data-placement="top" title="彻底删除"></i></a> ';
     }
 
 }

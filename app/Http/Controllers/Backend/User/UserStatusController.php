@@ -45,4 +45,16 @@ class UserStatusController extends Controller
         else
             return redirect()->route('admin.user.deactivated')->withFlashSuccess('修改用户状态成功!');
     }
+
+    public function restore(User $deletedUser)
+    {
+        $this->users->restore($deletedUser);
+        return redirect()->route('admin.user.deleted')->withFlashSuccess('用户恢复成功!');
+    }
+
+    public function delete(User $deletedUser)
+    {
+        $this->users->forceDelete($deletedUser);
+        return redirect()->route('admin.user.deleted')->withFlashSuccess('用户删除成功!');
+    }
 }

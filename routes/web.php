@@ -45,6 +45,12 @@ Route::group(['prefix'=>'admin','middleware'=>'auth','namespace'=>'Backend','as'
             //修改用户状态
             Route::get('mark/{status}', 'UserStatusController@mark')->name('user.mark')->where(['status' => '[0,1]']);
         });
+        Route::group(['prefix'=>'user/{deletedUser}'],function(){
+            //彻底删除
+            Route::get('delete', 'UserStatusController@delete')->name('user.delete-permanently');
+            //恢复删除
+            Route::get('restore', 'UserStatusController@restore')->name('user.restore');
+        });
     });
     //用户组管理
     Route::group(['namespace'=>'Role'],function(){
@@ -52,7 +58,6 @@ Route::group(['prefix'=>'admin','middleware'=>'auth','namespace'=>'Backend','as'
         Route::post('role/get','RoleTableController')->name('role.get');
         //用户组CRUD
         Route::resource('role','RoleController',['except'=>'show']);
-
     });
 });
 

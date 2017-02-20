@@ -50,8 +50,11 @@ class UserRepository extends Repository
      */
     public function create(array $input)
     {
-        $user=$this->createUser($input);
+        $data = $input['data'];
+        $roles = $input['roles'];
+        $user=$this->createUser($data);
         if(parent::save($user)){
+            $user->attachRoles($roles['assignees_roles']);
             return true;
         }
         throw new GeneralException('添加用户失败!');
@@ -66,10 +69,13 @@ class UserRepository extends Repository
      */
     public function update(Model $user,array $input)
     {
-        $this->checkUserByEmail($input,$user);
-        $input['status'] = isset($input['status']) ? 1 : 0;
-        if(parent::update($user,$input)){
-            parent::save($user);
+        $data=$input['data'];
+        $roles=$input['roles'];
+        $this->checkUserByEmail($data,$user);
+        $data['status'] = isset($data['status']) ? 1 : 0;
+        $this->checkUserRolesCount($roles);
+        if(parent::update($user,$data)){
+            $this->flushRoles($roles, $user);
             return true;
         }
         throw new GeneralException('修改用户信息失败!');
@@ -83,6 +89,9 @@ class UserRepository extends Repository
      */
     public function delete(Model $user)
     {
+        if(auth()->id()==$user->id){
+            throw new GeneralException('您无法删除您自己的账号!');
+        }
         if(parent::delete($user)){
             return true;
         }
@@ -117,6 +126,30 @@ class UserRepository extends Repository
         throw new GeneralException('修改用户状态失败!');
     }
 
+    public function forceDelete(Model $user)
+    {
+        if (is_null($user->deleted_at)) {
+            throw new GeneralException('请先正常删除后,再进行彻底删除此用户!');
+        }
+        if (parent::forceDelete($user)) {
+            return true;
+        }
+
+        throw new GeneralException('删除用户失败!');
+    }
+
+
+    public function restore(Model $user)
+    {
+        if (is_null($user->deleted_at)) {
+            throw new GeneralException('改用户处于正常状态,无需恢复!');
+        }
+        if(parent::restore($user)){
+            return true;
+        }
+        throw new GeneralException('用户恢复失败!');
+    }
+
     /**
      * 创建用户实例
      * @param $input
@@ -145,6 +178,20 @@ class UserRepository extends Repository
                 throw new GeneralException("邮箱已被占用!");
             }
         }
+    }
+
+    protected function checkUserRolesCount($roles)
+    {
+        if (count($roles['assignees_roles']) == 0) {
+            throw new GeneralException('请至少选择一个用户角色!');
+        }
+    }
+
+    protected function flushRoles($roles, $user)
+    {
+        //删除原来的角色，添加新的角色
+        $user->detachRoles($user->roles);
+        $user->attachRoles($roles['assignees_roles']);
     }
 
 }

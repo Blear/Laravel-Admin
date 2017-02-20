@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\User;
 use App\Http\Requests\Backend\User\StoreUserRequest;
 use App\Http\Requests\Backend\User\UpdateUserRequest;
 use App\Models\User\User;
+use App\Repositories\Backend\Role\RoleRepository;
 use App\Repositories\Backend\User\UserRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -12,9 +13,11 @@ use App\Http\Controllers\Controller;
 class UserController extends Controller
 {
     protected $users;
-    public function __construct(UserRepository $users)
+    protected $roles;
+    public function __construct(UserRepository $users,RoleRepository $roles)
     {
         $this->users=$users;
+        $this->roles=$roles;
     }
 
     /**
@@ -35,7 +38,8 @@ class UserController extends Controller
     public function create()
     {
         //
-        return view('backend.user.create');
+        return view('backend.user.create')
+            ->withRoles($this->roles->getAll());;
     }
 
     /**
@@ -46,7 +50,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        $this->users->create($request->all());
+        $this->users->create(['data' => $request->except('assignees_roles'), 'roles' => $request->only('assignees_roles')]);
         return redirect()->route('admin.user.index')->withFlashSuccess('用户添加成功!');
     }
 
@@ -69,7 +73,10 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return view('backend.user.edit')->withUser($user);
+        return view('backend.user.edit')
+            ->withUser($user)
+            ->withUserRoles($user->roles->pluck('id')->all())
+            ->withRoles($this->roles->getAll());
     }
 
     /**
@@ -81,7 +88,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $this->users->update($user,$request->all());
+        $this->users->update($user,['data'=>$request->except('assignees_roles'),'roles'=>$request->only('assignees_roles')]);
         return redirect()->route('admin.user.index')->withFlashSuccess('修改用户信息成功!');
     }
 

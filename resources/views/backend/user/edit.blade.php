@@ -41,6 +41,42 @@
                             <input {{$user->status==1 ? 'checked="checked"':' '}} name="status" value="1" id="status" type="checkbox">
                         </div><!--col-lg-1-->
                     </div>
+                    <div class="form-group">
+                        <label for="assignees_roles" class="col-lg-2 control-label">所属角色</label>
+
+                        <div class="col-lg-3">
+                            @if (count($roles) > 0)
+                                @foreach($roles as $role)
+                                    <input type="checkbox" value="{{$role->id}}" name="assignees_roles[{{ $role->id }}]" {{ is_array(old('assignees_roles')) ? (in_array($role->id, old('assignees_roles')) ? 'checked' : '') : (in_array($role->id, $user_roles) ? 'checked' : '') }} id="role-{{$role->id}}" /> <label for="role-{{$role->id}}">{{ $role->name }}</label>
+                                    <a href="#" data-role="role_{{$role->id}}" class="show-permissions small">
+                                        (
+                                        <span class="show-text">显示详细</span>
+                                        <span class="hide-text hidden">隐藏详细</span>
+                                        权限
+                                        )
+                                    </a>
+                                    <br/>
+                                    <div class="permission-list hidden" data-role="role_{{$role->id}}">
+                                        @if ($role->all)
+                                            全局权限
+                                        @else
+                                            @if (count($role->permissions) > 0)
+                                                <blockquote class="small">{{--
+                                            --}}@foreach ($role->permissions as $perm){{--
+                                            --}}{{$perm->display_name}}<br/>
+                                                    @endforeach
+                                                </blockquote>
+                                            @else
+                                                没有任何权限<br/><br/>
+                                            @endif
+                                        @endif
+                                    </div>
+                                @endforeach
+                            @else
+                                请先添加角色
+                            @endif
+                        </div><!--col-lg-3-->
+                    </div>
                 @endif
             </div><!-- /.box-body -->
         </div><!--box-->
@@ -58,6 +94,31 @@
                 <div class="clearfix"></div>
             </div><!-- /.box-body -->
         </div>
+        @if ($user->id == 1)
+            <input type="hidden" name="status" value="1">
+            <input type="hidden" name="assignees_roles[]" value="1">
+        @endif
     </form>
 @endsection
+@section('js')
+    <script type="text/javascript">
+        $(function() {
+            $(".show-permissions").click(function(e) {
+                e.preventDefault();
+                var $this = $(this);
+                var role = $this.data('role');
+                var permissions = $(".permission-list[data-role='"+role+"']");
+                var hideText = $this.find('.hide-text');
+                var showText = $this.find('.show-text');
+                // console.log(permissions); // for debugging
 
+                // show permission list
+                permissions.toggleClass('hidden');
+
+                // toggle the text Show/Hide for the link
+                hideText.toggleClass('hidden');
+                showText.toggleClass('hidden');
+            });
+        });
+    </script>
+@endsection
