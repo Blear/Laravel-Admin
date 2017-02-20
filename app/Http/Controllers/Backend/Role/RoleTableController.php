@@ -22,6 +22,14 @@ class RoleTableController extends Controller
             ->addColumn('users',function($role){
                 return $role->users->count();
             })
+            ->addColumn('permissions', function($role) {
+                if ($role->all)
+                    return '<span class="label label-success">全局</span>';
+
+                return $role->permissions->count() ?
+                    implode("<br/>", $role->permissions->pluck('display_name')->toArray()) :
+                    '<span class="label label-danger">无</span>';
+            })
             ->addColumn('actions', function($role) {
                 return $role->action_buttons;
             })

@@ -25,6 +25,7 @@
                     <thead>
                     <tr>
                         <th>角色</th>
+                        <th>权限</th>
                         <th>用户数量</th>
                         <th>排序</th>
                         <th>操作</th>
@@ -51,6 +52,7 @@
                 },
                 columns: [
                     {data: 'name', name: 'roles.name', render: $.fn.dataTable.render.text()},
+                    {data: 'permissions', name: 'permissions.display_name'},
                     {data: 'users', name: 'users.count', searchable: false},
                     {data: 'sort', name: 'roles.sort', render: $.fn.dataTable.render.text()},
                     {data: 'actions', name: 'actions', searchable: false, sortable: false}

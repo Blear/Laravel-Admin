@@ -6,6 +6,7 @@ use App\Http\Requests\Backend\Role\StoreRoleRequest;
 use App\Http\Requests\Backend\Role\UpdateRoleRequest;
 use App\Http\Requests\Backend\User\UpdateUserRequest;
 use App\Models\Role\Role;
+use App\Repositories\Backend\Permission\PermissionRepository;
 use App\Repositories\Backend\Role\RoleRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,9 +14,11 @@ use App\Http\Controllers\Controller;
 class RoleController extends Controller
 {
     protected $roles;
-    public function __construct(RoleRepository $roles)
+    protected $permissions;
+    public function __construct(RoleRepository $roles,PermissionRepository $permissions)
     {
         $this->roles=$roles;
+        $this->permissions=$permissions;
     }
 
     /**
@@ -35,7 +38,9 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return view('backend.role.create')->withRoleCount($this->roles->getCount());
+        return view('backend.role.create')
+            ->withRoleCount($this->roles->getCount())
+            ->withPermissions($this->permissions->getAll());
     }
 
     /**
@@ -69,7 +74,10 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        return view('backend.role.edit')->withRole($role);
+        return view('backend.role.edit')
+            ->withRole($role)
+            ->withRolePermissions($role->permissions->pluck('id')->all())
+            ->withPermissions($this->permissions->getAll());
     }
 
     /**

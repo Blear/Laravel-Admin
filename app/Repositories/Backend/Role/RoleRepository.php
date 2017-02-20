@@ -21,13 +21,13 @@ class RoleRepository extends Repository
     public function getForDataTable($orderBy='sort',$sort="asc")
     {
         $dataTableQuery=$this->query()
-            ->with('users')
+            ->with('users','permissions')
             ->orderBy($orderBy,$sort)
             ->select([
-            'id',
-            'name',
-            'all',
-            'sort'
+            'roles.id',
+            'roles.name',
+            'roles.all',
+            'roles.sort'
         ]);
         return $dataTableQuery;
     }
@@ -37,13 +37,26 @@ class RoleRepository extends Repository
         if($this->query()->where('name',$input['name'])->first()){
             throw new GeneralException('该角色名称已存在!');
         }
+        $all=$input['associated-permissions']=='all'?true:false;
+        if(!isset($input['permissions'])) $input['permissions']=[];
+
         $role=self::MODEL;
         $role=new $role;
         $role->name=$input['name'];
         $role->sort=isset($input['sort'])&&strlen($input['sort'])>0&&is_numeric($input['sort'])?(int) $input['sort']:0;
-        //权限暂时设置为全局
-        $role->all=true;
+        $role->all=$all;
         if(parent::save($role)){
+            if(!$all){
+                $permissions=[];
+                if(is_array($input['permissions'])&&count($input['permissions'])){
+                    foreach ($input['permissions'] as $permission) {
+                        if(is_numeric($permission)){
+                            array_push($permissions,$permission);
+                        }
+                    }
+                    $role->attachPermissions($permissions);
+                }
+            }
             return true;
         }
         throw new GeneralException('角色添加失败!');
@@ -51,11 +64,35 @@ class RoleRepository extends Repository
 
     public function update(Model $role,array $input)
     {
+        if($role->id==1){
+            $all=true;
+        }else{
+            $all=$input['associated-permissions']=='all'?true:false;
+        }
+        if(!isset($input['permissions'])) $input['permissions']=[];
+        if(!$all){
+            if(count($input['permissions'])==0){
+                throw new GeneralException('请至少添加一个权限!');
+            }
+        }
         $role->name = $input['name'];
         $role->sort = isset($input['sort']) && strlen($input['sort']) > 0 && is_numeric($input['sort']) ? (int) $input['sort'] : 0;
-        //权限暂时设置为全局
-        $role->all=true;
+        $role->all = $all;
         if(parent::save($role)){
+            if($all){
+                $role->permissions()->sync([]);
+            }else{
+                $role->permissions()->sync([]);
+                $permissions=[];
+                if(is_array($input['permissions'])&&count($input['permissions'])){
+                    foreach($input['permissions'] as $perm){
+                        if(is_numeric($perm)){
+                            array_push($permissions,$perm);
+                        }
+                    }
+                }
+                $role->attachPermissions($permissions);
+            }
             return true;
         }
         throw new GeneralException('角色更新失败!');
@@ -69,6 +106,7 @@ class RoleRepository extends Repository
         if($role->users()->count()>0){
             throw new GeneralException('该角色下面有用户，无法删除!');
         }
+        $role->permissions()->sync([]);
         if(parent::delete($role)){
             return true;
         }

@@ -9,6 +9,7 @@
 namespace App\Models\Role\Traits\Relationship;
 
 
+use App\Models\Permission\Permission;
 use App\Models\User\User;
 
 trait RoleRelationship
@@ -16,5 +17,10 @@ trait RoleRelationship
     public function users()
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class);
     }
 }
