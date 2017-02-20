@@ -16,7 +16,7 @@ class UserPasswordController extends Controller
         $this->users=$users;
     }
 
-    public function edit(User $user)
+    public function edit(ManageUserRequest $request,User $user)
     {
         return view('backend.user.change-password')->withUser($user);
     }

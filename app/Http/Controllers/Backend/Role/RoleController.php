@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Role;
 
+use App\Http\Requests\Backend\Role\ManageRoleRequest;
 use App\Http\Requests\Backend\Role\StoreRoleRequest;
 use App\Http\Requests\Backend\Role\UpdateRoleRequest;
 use App\Http\Requests\Backend\User\UpdateUserRequest;
@@ -26,7 +27,7 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ManageRoleRequest $request)
     {
         return view('backend.role.index');
     }
@@ -36,7 +37,7 @@ class RoleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(ManageRoleRequest $request)
     {
         return view('backend.role.create')
             ->withRoleCount($this->roles->getCount())
@@ -72,7 +73,7 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Role $role)
+    public function edit(ManageRoleRequest $request,Role $role)
     {
         return view('backend.role.edit')
             ->withRole($role)
@@ -99,7 +100,7 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function destroy(ManageRoleRequest $request,Role $role)
     {
         $this->roles->delete($role);
         return redirect()->route('admin.role.index')->withFlashSuccess('角色删除成功!');

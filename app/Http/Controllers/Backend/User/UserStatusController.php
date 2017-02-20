@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\User;
 
+use App\Http\Requests\Backend\User\ManageUserRequest;
 use App\Models\User\User;
 use App\Repositories\Backend\User\UserRepository;
 use Illuminate\Http\Request;
@@ -19,12 +20,12 @@ class UserStatusController extends Controller
      * 获取已禁用的用户
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getDeactivated()
+    public function getDeactivated(ManageUserRequest $request)
     {
         return view('backend.user.deactivated');
     }
 
-    public function getDeleted()
+    public function getDeleted(ManageUserRequest $request)
     {
         return view('backend.user.deleted');
     }
@@ -37,7 +38,7 @@ class UserStatusController extends Controller
      * @return mixed
      * @throws \App\Exceptions\GeneralException
      */
-    public function mark(User $user,$status)
+    public function mark(ManageUserRequest $request,User $user,$status)
     {
         $this->users->mark($user,$status);
         if($status==1)
@@ -46,13 +47,13 @@ class UserStatusController extends Controller
             return redirect()->route('admin.user.deactivated')->withFlashSuccess('修改用户状态成功!');
     }
 
-    public function restore(User $deletedUser)
+    public function restore(ManageUserRequest $request,User $deletedUser)
     {
         $this->users->restore($deletedUser);
         return redirect()->route('admin.user.deleted')->withFlashSuccess('用户恢复成功!');
     }
 
-    public function delete(User $deletedUser)
+    public function delete(ManageUserRequest $request,User $deletedUser)
     {
         $this->users->forceDelete($deletedUser);
         return redirect()->route('admin.user.deleted')->withFlashSuccess('用户删除成功!');

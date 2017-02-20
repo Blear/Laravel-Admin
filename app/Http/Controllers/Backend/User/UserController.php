@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\User;
 
+use App\Http\Requests\Backend\User\ManageUserRequest;
 use App\Http\Requests\Backend\User\StoreUserRequest;
 use App\Http\Requests\Backend\User\UpdateUserRequest;
 use App\Models\User\User;
@@ -25,7 +26,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ManageUserRequest $request)
     {
         return view('backend.user.index');
     }
@@ -35,7 +36,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(ManageUserRequest $request)
     {
         //
         return view('backend.user.create')
@@ -71,7 +72,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit(ManageUserRequest $request,User $user)
     {
         return view('backend.user.edit')
             ->withUser($user)
@@ -98,7 +99,7 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(ManageUserRequest $request,User $user)
     {
         $this->users->delete($user);
         return redirect()->route('admin.user.index')->withFlashSuccess('删除用户成功!');

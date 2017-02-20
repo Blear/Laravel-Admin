@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\Role;
 
+use App\Http\Requests\Backend\Role\ManageRoleRequest;
 use App\Models\Role\Role;
 use App\Repositories\Backend\Role\RoleRepository;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class RoleTableController extends Controller
         $this->roles=$roles;
     }
 
-    public function __invoke()
+    public function __invoke(ManageRoleRequest $request)
     {
         return Datatables::of($this->roles->getForDataTable())
             ->addColumn('users',function($role){

@@ -20,14 +20,14 @@
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="" class="user-image" alt="User Image">
-                        <span class="hidden-xs">UserName</span>
+                        <span class="hidden-xs">{{ access()->user()->name }}</span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
                         <li class="user-header">
                             <img src="" class="img-circle" alt="User Image">
                             <p>
-                                <small>注册时间：</small>
+                                <small>注册时间：{{ access()->user()->created_at->format("Y-m-d") }}</small>
                             </p>
                         </li>
                         <!-- Menu Footer-->
